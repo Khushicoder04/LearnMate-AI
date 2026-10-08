@@ -37,7 +37,7 @@ function Flashcards() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/generate-flashcards",
+        "https://learnmate-ai-52yg.onrender.com/api/generate-flashcards",
         {
           documentId: id,
         },

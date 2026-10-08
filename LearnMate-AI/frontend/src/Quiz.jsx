@@ -74,7 +74,7 @@ function Quiz() {
         const token = localStorage.getItem("token");
 
         const response = await axios.get(
-          `http://localhost:5000/api/documents/${id}`,
+          `https://learnmate-ai-52yg.onrender.com/api/documents/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ function Quiz() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/generate-quiz",
+        "https://learnmate-ai-52yg.onrender.com/api/generate-quiz",
         {
           documentId: id,
         },
@@ -135,7 +135,7 @@ function Quiz() {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:5000/api/quiz-results",
+        "https://learnmate-ai-52yg.onrender.com/api/quiz-results",
         {
           documentId: id,
           score: newScore,

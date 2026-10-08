@@ -18,7 +18,7 @@ const fetchProgress = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/progress",
+      "",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ const fetchProgress = async () => {
         const token = localStorage.getItem("token");
 
         const response = await axios.get(
-          "http://localhost:5000/api/documents",
+          "",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -100,7 +100,7 @@ const fetchProgress = async () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/upload",
+        "",
         formData,
         {
           headers: {
@@ -114,7 +114,7 @@ const fetchProgress = async () => {
 
       // Refresh documents after upload
       const documentsResponse = await axios.get(
-        "http://localhost:5000/api/documents",
+        "",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ const fetchProgress = async () => {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/api/documents/${documentId}`,
+      `/api/documents/${documentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -47,7 +47,7 @@ function Login() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "https://learnmate-ai-52yg.onrender.com/api/login",
         formData
       );
 

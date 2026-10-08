@@ -36,7 +36,7 @@ function Chat() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/chat",
+        "https://learnmate-ai-52yg.onrender.com/api/chat",
         {
           documentId: id,
           question: question,
