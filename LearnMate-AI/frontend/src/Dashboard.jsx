@@ -12,13 +12,14 @@ function Dashboard() {
   const [documents, setDocuments] = useState([]);
   const [quizzesCompleted, setQuizzesCompleted] = useState(0);
 const [learningProgress, setLearningProgress] = useState(0);
+const API_BASE = "https://learnmate-ai-52yg.onrender.com";
 
 const fetchProgress = async () => {
   try {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "",
+      `${API_BASE}/api/progress`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -57,7 +58,7 @@ const fetchProgress = async () => {
         const token = localStorage.getItem("token");
 
         const response = await axios.get(
-          "",
+         `${API_BASE}/api/documents`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -84,58 +85,64 @@ const fetchProgress = async () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setMessage("Please select a file first.");
-      return;
-    }
+ 
+const handleUpload = async () => {
+  if (!selectedFile) {
+    setMessage("Please select a file first.");
+    return;
+  }
 
-    try {
-      setUploading(true);
-      setMessage("");
+  try {
+    setUploading(true);
+    setMessage("");
 
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
 
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        "",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setMessage(response.data.message);
-      console.log(response.data);
-
-      // Refresh documents after upload
-      const documentsResponse = await axios.get(
-        "",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setDocuments(documentsResponse.data.documents);
-      setSelectedFile(null);
-    } catch (error) {
-      console.error("Upload error:", error);
-
-      if (error.response) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("File upload failed.");
+    // Upload the selected file
+    const response = await axios.post(
+      `${API_BASE}/api/upload`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } finally {
-      setUploading(false);
-    }
-  };
+    );
+
+    setMessage(response.data.message || "File uploaded successfully!");
+    console.log(response.data);
+
+    // Fetch documents again after upload
+    const documentsResponse = await axios.get(
+      `${API_BASE}/api/documents`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setDocuments(
+      Array.isArray(documentsResponse.data.documents)
+        ? documentsResponse.data.documents
+        : []
+    );
+
+    setSelectedFile(null);
+  } catch (error) {
+    console.error("Upload error:", error);
+
+    setMessage(
+      error.response?.data?.message || "File upload failed."
+    );
+  } finally {
+    setUploading(false);
+  }
+};
+
 
   const handleDelete = async (documentId) => {
   const confirmDelete = window.confirm(
@@ -148,7 +155,7 @@ const fetchProgress = async () => {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `/api/documents/${documentId}`,
+      `${API_BASE}/api/documents/${documentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
