@@ -1,67 +1,93 @@
+
 import { useState } from "react";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import "./Register.css";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post(
         "https://learnmate-ai-52yg.onrender.com/api/users",
-        {
-          name,
-          email,
-          password,
-        }
+        { name, email, password }
       );
 
-      console.log(response.data);
-      alert("User registered successfully!");
+      alert(response.data?.message || "Registration successful!");
+      navigate("/login");
     } catch (error) {
-      console.error(error);
-      alert("Registration failed!");
+      console.error("Registration error:", error.response?.data || error);
+      alert(
+        error.response?.data?.message ||
+          "Registration failed. Please check your details and try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Register</h1>
+    <main className="register-page">
+      <section className="register-card">
+        <div className="register-brand">LearnMate <span>AI</span></div>
+        <div className="register-heading">
+          <h1>Create your account</h1>
+          <p>Start your personalized learning journey.</p>
+        </div>
 
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Enter name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <form onSubmit={handleRegister} className="register-form">
+          <label htmlFor="name">Full name</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            autoComplete="name"
+          />
 
-        <br />
+          <label htmlFor="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
 
-        <input
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Create a password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            autoComplete="new-password"
+          />
 
-        <br />
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Create account"}
+          </button>
+        </form>
 
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <br />
-
-        <button type="submit">Register</button>
-      </form>
-    </div>
+        <p className="register-footer">
+          Already have an account? <Link to="/login">Sign in</Link>
+        </p>
+      </section>
+    </main>
   );
 }
 
