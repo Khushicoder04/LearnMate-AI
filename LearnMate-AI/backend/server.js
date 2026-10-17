@@ -15,6 +15,10 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID
+);
+
 const User = require("./models/User");
 const authMiddleware = require("./middleware/authMiddleware");
 const Document = require("./models/Document");
@@ -24,6 +28,7 @@ const chunkText = require("./utils/chunker");
 const generateEmbedding = require("./utils/embedding");
 const cosineSimilarity = require("./utils/similarity");
 const getRelevantChunks = require("./utils/relevantChunks");
+const { OAuth2Client } = require("google-auth-library");
 
 
 const app = express();
@@ -123,13 +128,13 @@ app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
 
-    if (!user) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+   if (!user.password) {
+  return res.status(401).json({
+    message: "Please sign in using Google.",
+  });
+}
 
     const isPasswordCorrect = await bcrypt.compare(
       password,
@@ -172,6 +177,75 @@ app.post("/api/login", async (req, res) => {
     });
   }
 });
+
+
+/* Google Sign-In */
+app.post("/api/auth/google", async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({
+        message: "Google credential is required",
+      });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload || !payload.email || !payload.email_verified) {
+      return res.status(401).json({
+        message: "Google account could not be verified",
+      });
+    }
+
+    const email = payload.email.toLowerCase();
+    const name = payload.name || email.split("@")[0];
+
+    let user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+      });
+
+      await user.save();
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    return res.status(200).json({
+      message: "Google login successful!",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Google login error:", error.message);
+
+    return res.status(401).json({
+      message: "Google sign-in failed. Please try again.",
+    });
+  }
+});
+
 
 // Test API
 app.get("/api/test", (req, res) => {

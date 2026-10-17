@@ -1,9 +1,91 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
+
+  
+  const googleButtonRef = useRef(null);
+
+  const handleGoogleCredential = async (response) => {
+    try {
+      setError("");
+      setLoading(true);
+
+      const result = await axios.post(
+        "https://learnmate-ai-52yg.onrender.com/api/auth/google",
+        { credential: response.credential }
+      );
+
+      localStorage.setItem("token", result.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google login error:", error);
+      setError(
+        error.response?.data?.message ||
+          "Google login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const initializeGoogleLogin = () => {
+      if (
+        cancelled ||
+        !window.google?.accounts?.id ||
+        !googleButtonRef.current
+      ) {
+        return;
+      }
+
+      googleButtonRef.current.innerHTML = "";
+
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+      });
+
+      window.google.accounts.id.renderButton(
+        googleButtonRef.current,
+        {
+          theme: darkMode ? "filled_black" : "outline",
+          size: "large",
+          shape: "rectangular",
+          text: "continue_with",
+          width: 320,
+        }
+      );
+    };
+
+    if (window.google?.accounts?.id) {
+      initializeGoogleLogin();
+    } else {
+      const existingScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]'
+      );
+
+      if (!existingScript) {
+        const script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = initializeGoogleLogin;
+        document.head.appendChild(script);
+      } else {
+        existingScript.addEventListener("load", initializeGoogleLogin);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [darkMode]);
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -413,7 +495,10 @@ function Login() {
               </div>
 
               {/* Google */}
-              <button
+              <div className="flex w-full justify-center">
+  <div ref={googleButtonRef} />
+</div>
+              {/* <button
                 type="button"
                 className={`flex w-full items-center justify-center gap-3 rounded-xl border py-3.5 font-medium transition-all duration-300 hover:-translate-y-0.5 ${
                   darkMode
@@ -423,7 +508,7 @@ function Login() {
               >
                 <span className="text-lg font-bold">G</span>
                 Continue with Google
-              </button>
+              </button> */}
 
               {/* Register */}
               <p
