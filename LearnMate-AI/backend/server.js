@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const { GoogleGenAI } = require("@google/genai");
+const { OAuth2Client } = require("google-auth-library");
 require("dotenv").config();
 
 const ai = new GoogleGenAI({
@@ -28,7 +29,6 @@ const chunkText = require("./utils/chunker");
 const generateEmbedding = require("./utils/embedding");
 const cosineSimilarity = require("./utils/similarity");
 const getRelevantChunks = require("./utils/relevantChunks");
-const { OAuth2Client } = require("google-auth-library");
 
 
 const app = express();
