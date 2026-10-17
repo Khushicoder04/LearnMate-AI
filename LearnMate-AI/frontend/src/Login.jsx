@@ -31,61 +31,62 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    let cancelled = false;
+  // useEffect(() => {
+  //   let cancelled = false;
 
-    const initializeGoogleLogin = () => {
-      if (
-        cancelled ||
-        !window.google?.accounts?.id ||
-        !googleButtonRef.current
-      ) {
-        return;
-      }
+  //   const initializeGoogleLogin = () => {
+  //     if (
+  //       cancelled ||
+  //       !window.google?.accounts?.id ||
+  //       !googleButtonRef.current
+  //     ) {
+  //       return;
+  //     }
 
-      googleButtonRef.current.innerHTML = "";
+  //     googleButtonRef.current.innerHTML = "";
 
-      window.google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential,
-      });
+  //     window.google.accounts.id.initialize({
+  //       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  //       callback: handleGoogleCredential,
+  //     });
 
-      window.google.accounts.id.renderButton(
-        googleButtonRef.current,
-        {
-          theme: darkMode ? "filled_black" : "outline",
-          size: "large",
-          shape: "rectangular",
-          text: "continue_with",
-          width: 320,
-        }
-      );
-    };
+  //     window.google.accounts.id.renderButton(
+  //       googleButtonRef.current,
+  //       {
+  //         theme: darkMode ? "filled_black" : "outline",
+  //         size: "large",
+  //         shape: "rectangular",
+  //         text: "continue_with",
+  //         width: 320,
+  //       }
+  //     );
+  //   };
 
-    if (window.google?.accounts?.id) {
-      initializeGoogleLogin();
-    } else {
-      const existingScript = document.querySelector(
-        'script[src="https://accounts.google.com/gsi/client"]'
-      );
+  //   if (window.google?.accounts?.id) {
+  //     initializeGoogleLogin();
+  //   } else {
+  //     const existingScript = document.querySelector(
+  //       'script[src="https://accounts.google.com/gsi/client"]'
+  //     );
 
-      if (!existingScript) {
-        const script = document.createElement("script");
-        script.src = "https://accounts.google.com/gsi/client";
-        script.async = true;
-        script.defer = true;
-        script.onload = initializeGoogleLogin;
-        document.head.appendChild(script);
-      } else {
-        existingScript.addEventListener("load", initializeGoogleLogin);
-      }
-    }
+  //     if (!existingScript) {
+  //       const script = document.createElement("script");
+  //       script.src = "https://accounts.google.com/gsi/client";
+  //       script.async = true;
+  //       script.defer = true;
+  //       script.onload = initializeGoogleLogin;
+  //       document.head.appendChild(script);
+  //     } else {
+  //       existingScript.addEventListener("load", initializeGoogleLogin);
+  //     }
+  //   }
 
-    return () => {
-      cancelled = true;
-    };
-  }, [darkMode]);
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, [darkMode]);
 
+  
 
   const [formData, setFormData] = useState({
     email: "",
@@ -100,6 +101,63 @@ function Login() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("learnmate-theme") === "dark";
   });
+
+  
+useEffect(() => {
+  let cancelled = false;
+
+  const initializeGoogleLogin = () => {
+    if (
+      cancelled ||
+      !window.google?.accounts?.id ||
+      !googleButtonRef.current
+    ) {
+      return;
+    }
+
+    googleButtonRef.current.innerHTML = "";
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential,
+    });
+
+    window.google.accounts.id.renderButton(
+      googleButtonRef.current,
+      {
+        theme: darkMode ? "filled_black" : "outline",
+        size: "large",
+        shape: "rectangular",
+        text: "continue_with",
+        width: 320,
+      }
+    );
+  };
+
+  if (window.google?.accounts?.id) {
+    initializeGoogleLogin();
+  } else {
+    const existingScript = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]'
+    );
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeGoogleLogin;
+      document.head.appendChild(script);
+    } else {
+      existingScript.addEventListener("load", initializeGoogleLogin);
+    }
+  }
+
+  return () => {
+    cancelled = true;
+  };
+}, [darkMode]);
+
 
   useEffect(() => {
     localStorage.setItem(
