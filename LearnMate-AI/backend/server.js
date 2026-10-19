@@ -1,6 +1,7 @@
 const dns = require("dns");
 dns.setServers(["8.8.8.8"]);
 const fs = require("fs");
+const path = require("path");
 
 const express = require("express");
 const cors = require("cors");
@@ -38,9 +39,14 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+
+const uploadDir = path.join(__dirname, "uploads");
+
+fs.mkdirSync(uploadDir, { recursive: true });
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, uploadDir);
   },
 
   filename: (req, file, cb) => {
@@ -48,6 +54,7 @@ const storage = multer.diskStorage({
     cb(null, uniqueName);
   },
 });
+
 
 const upload = multer({
   storage,
