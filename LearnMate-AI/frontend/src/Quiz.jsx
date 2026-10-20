@@ -203,12 +203,6 @@ function Quiz() {
               {score} / {questions.length}
             </p>
 
-            <button
-              onClick={() => navigate(-1)}
-              className="mt-8 rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white hover:bg-indigo-700"
-            >
-              Back to Document
-            </button>
           </div>
         </main>
       </div>
@@ -228,29 +222,33 @@ function Quiz() {
       <main className="mx-auto max-w-3xl px-6 py-10">
 
         {/* Header */}
-        <div className="mb-8">
-          <p className="text-sm font-medium text-indigo-500">
-            AI STUDY ASSISTANT
-          </p>
+        
+{/* Header */}
+<div className="mb-8">
 
-          <h1
-            className={`mt-2 text-3xl font-bold ${
-              darkMode ? "text-white" : "text-gray-900"
-            }`}
-          >
-            Practice Quiz
-          </h1>
+  <p className="text-sm font-medium text-indigo-500">
+    AI STUDY ASSISTANT
+  </p>
 
-          <p
-            className={`mt-2 ${
-              darkMode ? "text-gray-400" : "text-gray-500"
-            }`}
-          >
-            {document
-              ? `Quiz based on ${document.originalName}`
-              : "Test your understanding of the study material."}
-          </p>
-        </div>
+  <h1
+    className={`mt-2 text-3xl font-bold ${
+      darkMode ? "text-white" : "text-gray-900"
+    }`}
+  >
+    Practice Quiz
+  </h1>
+
+  <p
+    className={`mt-2 ${
+      darkMode ? "text-gray-400" : "text-gray-500"
+    }`}
+  >
+    {document
+      ? `Quiz based on ${document.originalName}`
+      : "Test your understanding of the study material."}
+  </p>
+</div>
+
 
         {/* Quiz Card */}
         <div
@@ -335,6 +333,20 @@ function Quiz() {
         >
           {quizLoading ? "Generating AI Quiz..." : "Generate AI Quiz"}
         </button>
+
+       
+{/* Back to Documents Button */}
+<button
+  onClick={() => navigate(-1)}
+  className={`mt-5 w-full cursor-pointer rounded-xl border px-6 py-3 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 ${
+    darkMode
+      ? "border-indigo-800 bg-slate-900 text-indigo-400 hover:bg-indigo-950"
+      : "border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50"
+  }`}
+>
+  ← Back to Documents
+</button>
+
       </main>
     </div>
   );

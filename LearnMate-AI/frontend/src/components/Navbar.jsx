@@ -75,22 +75,22 @@ function Navbar() {
         {/* Dashboard */}
         <button
           onClick={() => navigate("/dashboard")}
-          className={`font-medium transition ${
-            darkMode
-              ? "text-indigo-400 hover:text-indigo-300"
-              : "text-indigo-600 hover:text-indigo-700"
-          }`}
+          className={`cursor-pointer rounded-lg px-3 py-2 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-50 hover:shadow-sm active:scale-95 ${
+  darkMode
+    ? "text-indigo-400 hover:bg-slate-800 hover:text-indigo-300"
+    : "text-indigo-600 hover:text-indigo-700"
+}`}
         >
           Dashboard
         </button>
 
         {/* Profile */}
         <button
-          className={`font-medium transition ${
-            darkMode
-              ? "text-gray-400 hover:text-indigo-400"
-              : "text-gray-600 hover:text-indigo-600"
-          }`}
+          className={`cursor-pointer rounded-lg px-3 py-2 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm active:scale-95 ${
+  darkMode
+    ? "text-gray-400 hover:bg-slate-800 hover:text-indigo-400"
+    : "text-gray-600 hover:bg-gray-100 hover:text-indigo-600"
+}`}
         >
           Profile
         </button>
@@ -99,11 +99,11 @@ function Navbar() {
         <button
           onClick={toggleTheme}
           title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition ${
-            darkMode
-              ? "bg-slate-800 text-yellow-300 hover:bg-slate-700"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
+          className={`cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md active:scale-95 ${
+  darkMode
+    ? "bg-slate-800 text-yellow-300 hover:bg-slate-700"
+    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+}`}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
@@ -111,11 +111,11 @@ function Navbar() {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className={`rounded-lg px-4 py-2 text-sm font-medium text-white transition ${
-            darkMode
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-gray-900 hover:bg-gray-700"
-          }`}
+          className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 ${
+  darkMode
+    ? "bg-red-600 hover:bg-red-700"
+    : "bg-gray-900 hover:bg-gray-700"
+}`}
         >
           Logout
         </button>

@@ -506,7 +506,7 @@ const handleUpload = async () => {
 <button
   onClick={handleUpload}
   disabled={uploading}
-  className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+  className="cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95"
 >
   {uploading && (
     <svg
@@ -631,7 +631,7 @@ const handleUpload = async () => {
       event.stopPropagation();
       handleDelete(document._id);
     }}
-    className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+    className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 transition ${
       darkMode
         ? "bg-red-950/40 text-red-400 hover:bg-red-950/70"
         : "bg-red-50 text-red-600 hover:bg-red-100"
@@ -670,7 +670,7 @@ const handleUpload = async () => {
 
             {/* AI Chat */}
             <button
-              className={`group rounded-2xl border p-6 text-left shadow-sm transition hover:-translate-y-1 ${
+              className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 shadow-sm transition hover:-translate-y-1 ${
                 darkMode
                   ? "border-slate-800 bg-slate-900 hover:border-indigo-500"
                   : "border-gray-200 bg-white hover:border-indigo-200 hover:shadow-md"
@@ -703,7 +703,7 @@ const handleUpload = async () => {
 
             {/* Quiz */}
             <button
-              className={`group rounded-2xl border p-6 text-left shadow-sm transition hover:-translate-y-1 ${
+              className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 shadow-sm transition hover:-translate-y-1 ${
                 darkMode
                   ? "border-slate-800 bg-slate-900 hover:border-purple-500"
                   : "border-gray-200 bg-white hover:border-purple-200 hover:shadow-md"
@@ -736,7 +736,7 @@ const handleUpload = async () => {
 
             {/* Flashcards */}
             <button
-              className={`group rounded-2xl border p-6 text-left shadow-sm transition hover:-translate-y-1 ${
+              className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 shadow-sm transition hover:-translate-y-1 ${
                 darkMode
                   ? "border-slate-800 bg-slate-900 hover:border-green-500"
                   : "border-gray-200 bg-white hover:border-green-200 hover:shadow-md"
