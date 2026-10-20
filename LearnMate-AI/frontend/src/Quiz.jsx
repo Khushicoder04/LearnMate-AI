@@ -325,7 +325,7 @@ function Quiz() {
         <button
           onClick={generateQuiz}
           disabled={quizLoading}
-          className={`mt-5 w-full rounded-xl border px-6 py-3 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+          className={`mt-5 w-full cursor-pointer rounded-xl border px-6 py-3 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 ${
             darkMode
               ? "border-indigo-800 bg-slate-900 text-indigo-400 hover:bg-indigo-950"
               : "border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50"

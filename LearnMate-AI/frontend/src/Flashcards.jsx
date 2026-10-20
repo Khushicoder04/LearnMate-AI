@@ -139,7 +139,7 @@ function Flashcards() {
             <button
               onClick={generateFlashcards}
               disabled={loading}
-              className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 w-full cursor-pointer rounded-xl border border-blue-200 bg-blue-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg active:translate-y-0 active:scale-95"
             >
               {loading
                 ? "Generating Flashcards..."
@@ -208,7 +208,7 @@ function Flashcards() {
               <button
                 onClick={handlePrevious}
                 disabled={currentCard === 0}
-                className={`flex-1 rounded-xl border px-6 py-3 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                className={`mt-5 w-full cursor-pointer rounded-xl border px-6 py-3 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 ${
                   darkMode
                     ? "border-slate-700 bg-slate-900 text-gray-300 hover:bg-slate-800"
                     : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
@@ -220,7 +220,7 @@ function Flashcards() {
               <button
                 onClick={handleNext}
                 disabled={currentCard === flashcards.length - 1}
-                className="flex-1 rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-5 w-full cursor-pointer rounded-xl border px-6 py-3 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95"
               >
                 Next Card
               </button>
@@ -231,7 +231,7 @@ function Flashcards() {
         {/* Back */}
         <button
           onClick={() => navigate(`/document/${id}`)}
-          className={`mt-5 w-full rounded-xl border px-6 py-3 font-medium transition ${
+          className={`mt-5 w-full cursor-pointer rounded-xl border px-6 py-3 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 ${
             darkMode
               ? "border-slate-700 bg-slate-900 text-gray-300 hover:bg-slate-800"
               : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
