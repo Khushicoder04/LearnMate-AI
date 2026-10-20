@@ -183,7 +183,7 @@ function Chat() {
 
               <button
                 onClick={handleAsk}
-                className="rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-700"
+                className="mt-5 w-full cursor-pointer rounded-xl border border-blue-200 bg-blue-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg active:translate-y-0 active:scale-95"
               >
                 Ask AI
               </button>
