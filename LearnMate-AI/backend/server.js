@@ -404,8 +404,22 @@ app.post(
         });
       }
 
+      res.status(200);
+res.setHeader("Content-Type", "application/x-ndjson");
+res.setHeader("Cache-Control", "no-cache, no-transform");
+res.setHeader("X-Accel-Buffering", "no");
+res.flushHeaders();
+
+const sendProgress = (stage, progress, message) => {
+  res.write(
+    JSON.stringify({ type: "progress", stage, progress, message }) + "\n"
+  );
+};
+
 let extractedText = "";
 let chunks = [];
+
+sendProgress("extracting", 10, "Extracting document text");
 
 extractedText = await extractDocumentText(
   req.file.path,
@@ -414,8 +428,21 @@ extractedText = await extractDocumentText(
 
 chunks = chunkText(extractedText);
 
+if (!extractedText.trim() || chunks.length === 0) {
+  res.write(
+    JSON.stringify({
+      type: "error",
+      message: "No readable text found in this document.",
+    }) + "\n"
+  );
+  return res.end();
+}
+
+
 console.log("Extracted text length:", extractedText.length);
 console.log("Chunks created:", chunks.length);
+
+sendProgress("chunking", 30, "Text chunks created");
 
 const embeddedChunks = [];
 
@@ -428,6 +455,18 @@ for (const chunk of chunks) {
     text: chunk,
     embedding: embedding,
   });
+
+  const progress =
+  30 +
+  Math.round(
+    (embeddedChunks.length / chunks.length) * 60
+  );
+
+  sendProgress(
+    "embedding",
+    progress,
+    `Generated ${embeddedChunks.length} of ${chunks.length} embeddings`
+  );
 }
 
 chunks = embeddedChunks;
@@ -445,31 +484,54 @@ console.log("Embeddings generated:", chunks.length);
   chunks: chunks,
 });
 
+sendProgress("saving", 95, "Saving document to database");
+
 await document.save();
+
+sendProgress("completed", 100, "Document processing completed");
 
 console.log("Document saved successfully!");
 console.log("Extracted text length:", extractedText.length);
 console.log("Text preview:", extractedText.substring(0, 500));
 
-     res.status(201).json({
-  message: "File uploaded and text extracted successfully!",
-  file: {
-    originalName: req.file.originalname,
-    filename: req.file.filename,
-    path: req.file.path,
-    size: req.file.size,
-  },
-  textLength: extractedText.length,
-  chunkCount: chunks.length,
-  textPreview: extractedText.substring(0, 500),
-});
-    } catch (error) {
-      console.error("Upload/extraction error:", error);
+     res.write(
+  JSON.stringify({
+    type: "complete",
+    progress: 100,
+    message: "File uploaded and processed successfully!",
+    file: {
+      originalName: req.file.originalname,
+      filename: req.file.filename,
+      path: req.file.path,
+      size: req.file.size,
+    },
+    textLength: extractedText.length,
+    chunkCount: chunks.length,
+    textPreview: extractedText.substring(0, 500),
+  }) + "\n"
+);
 
-      res.status(500).json({
-        message: "File upload or text extraction failed",
-      });
-    }
+res.end();
+
+   } catch (error) {
+  console.error("Upload/extraction error:", error);
+
+  if (!res.headersSent) {
+    return res.status(500).json({
+      type: "error",
+      message: "File upload or text extraction failed",
+    });
+  }
+
+  res.write(
+    JSON.stringify({
+      type: "error",
+      message: "File upload or text extraction failed",
+    }) + "\n"
+  );
+
+  res.end();
+}
   }
 );
 

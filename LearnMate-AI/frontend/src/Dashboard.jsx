@@ -8,6 +8,7 @@ function Dashboard() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [message, setMessage] = useState("");
   const [documents, setDocuments] = useState([]);
   const [quizzesCompleted, setQuizzesCompleted] = useState(0);
@@ -86,6 +87,8 @@ const fetchProgress = async () => {
   };
 
  
+
+
 const handleUpload = async () => {
   if (!selectedFile) {
     setMessage("Please select a file first.");
@@ -94,6 +97,7 @@ const handleUpload = async () => {
 
   try {
     setUploading(true);
+    setUploadProgress(0);
     setMessage("");
 
     const formData = new FormData();
@@ -101,21 +105,95 @@ const handleUpload = async () => {
 
     const token = localStorage.getItem("token");
 
-    // Upload the selected file
-    const response = await axios.post(
-      `${API_BASE}/api/upload`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
 
-    setMessage(response.data.message || "File uploaded successfully!");
-    console.log(response.data);
+      xhr.open("POST", `${API_BASE}/api/upload`);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.setRequestHeader("Accept", "application/x-ndjson");
 
-    // Fetch documents again after upload
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round(
+            (event.loaded / event.total) * 100
+          );
+
+          // File transfer progress: maximum 99%
+          setUploadProgress(Math.min(percent, 99));
+          setMessage("Uploading document...");
+        }
+      };
+
+      xhr.onprogress = (event) => {
+        const responseText = xhr.responseText || "";
+        const lines = responseText.split("\n");
+
+        // Process complete NDJSON lines only
+        for (const line of lines.slice(0, -1)) {
+          if (!line.trim()) continue;
+
+          try {
+            const data = JSON.parse(line);
+
+            if (data.type === "progress") {
+              setUploadProgress(data.progress);
+              setMessage(data.message || "Processing document...");
+            }
+
+            if (data.type === "error") {
+              reject(new Error(data.message));
+              return;
+            }
+
+            if (data.type === "complete") {
+              setUploadProgress(100);
+              setMessage(data.message || "Document processed successfully!");
+            }
+          } catch (parseError) {
+            console.error("Progress parsing error:", parseError);
+          }
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const lines = (xhr.responseText || "").trim().split("\n");
+          let result = null;
+
+          try {
+            result = JSON.parse(lines[lines.length - 1]);
+          } catch {
+            // The response may end with an empty line.
+            try {
+              result = JSON.parse(lines[lines.length - 2]);
+            } catch {
+              reject(new Error("Invalid response from server."));
+              return;
+            }
+          }
+
+          if (result.type === "error") {
+            reject(new Error(result.message));
+            return;
+          }
+
+          resolve(result);
+        } else {
+          reject(new Error("File upload failed. Please try again."));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error("Network error while uploading the file."));
+      };
+
+      xhr.onabort = () => {
+        reject(new Error("File upload was cancelled."));
+      };
+
+      xhr.send(formData);
+    });
+
     const documentsResponse = await axios.get(
       `${API_BASE}/api/documents`,
       {
@@ -132,17 +210,15 @@ const handleUpload = async () => {
     );
 
     setSelectedFile(null);
+    setMessage("File uploaded and processed successfully!");
   } catch (error) {
     console.error("Upload error:", error);
-
-    setMessage(
-      error.response?.data?.message || "File upload failed."
-    );
+    setMessage(error.message || "File upload failed.");
   } finally {
     setUploading(false);
+    setUploadProgress(0);
   }
 };
-
 
   const handleDelete = async (documentId) => {
   const confirmDelete = window.confirm(
@@ -389,15 +465,75 @@ const handleUpload = async () => {
                 >
                   {(selectedFile.size / 1024).toFixed(2)} KB
                 </p>
+
+                
+{uploading && (
+  <div className="mt-4 w-full">
+    <div className="mb-2 flex items-center justify-between text-sm">
+      <span
+        className={
+          darkMode ? "text-indigo-300" : "text-indigo-600"
+        }
+      >
+        Uploading your document...
+      </span>
+
+      <span
+        className={`font-semibold ${
+          darkMode ? "text-indigo-300" : "text-indigo-600"
+        }`}
+      >
+        {uploadProgress}%
+      </span>
+    </div>
+
+    <div
+      className={`h-2 w-full overflow-hidden rounded-full ${
+        darkMode ? "bg-slate-700" : "bg-indigo-100"
+      }`}
+    >
+      <div
+        className="h-full rounded-full bg-indigo-500 transition-all duration-200"
+        style={{ width: `${uploadProgress}%` }}
+      />
+    </div>
+  </div>
+)}
+
               </div>
 
-              <button
-                onClick={handleUpload}
-                disabled={uploading}
-                className="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {uploading ? "Uploading..." : "Upload"}
-              </button>
+             
+<button
+  onClick={handleUpload}
+  disabled={uploading}
+  className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+>
+  {uploading && (
+    <svg
+      className="h-5 w-5 animate-spin"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        strokeOpacity="0.25"
+        strokeWidth="3"
+      />
+      <path
+        d="M21 12a9 9 0 0 0-9-9"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  )}
+
+  {uploading ? `Uploading ${uploadProgress}%` : "Upload"}
+</button>
+
             </div>
           )}
 
