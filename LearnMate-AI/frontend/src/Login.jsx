@@ -31,63 +31,6 @@ function Login() {
     }
   };
 
-  // useEffect(() => {
-  //   let cancelled = false;
-
-  //   const initializeGoogleLogin = () => {
-  //     if (
-  //       cancelled ||
-  //       !window.google?.accounts?.id ||
-  //       !googleButtonRef.current
-  //     ) {
-  //       return;
-  //     }
-
-  //     googleButtonRef.current.innerHTML = "";
-
-  //     window.google.accounts.id.initialize({
-  //       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-  //       callback: handleGoogleCredential,
-  //     });
-
-  //     window.google.accounts.id.renderButton(
-  //       googleButtonRef.current,
-  //       {
-  //         theme: darkMode ? "filled_black" : "outline",
-  //         size: "large",
-  //         shape: "rectangular",
-  //         text: "continue_with",
-  //         width: 320,
-  //       }
-  //     );
-  //   };
-
-  //   if (window.google?.accounts?.id) {
-  //     initializeGoogleLogin();
-  //   } else {
-  //     const existingScript = document.querySelector(
-  //       'script[src="https://accounts.google.com/gsi/client"]'
-  //     );
-
-  //     if (!existingScript) {
-  //       const script = document.createElement("script");
-  //       script.src = "https://accounts.google.com/gsi/client";
-  //       script.async = true;
-  //       script.defer = true;
-  //       script.onload = initializeGoogleLogin;
-  //       document.head.appendChild(script);
-  //     } else {
-  //       existingScript.addEventListener("load", initializeGoogleLogin);
-  //     }
-  //   }
-
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, [darkMode]);
-
-  
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -213,14 +156,14 @@ useEffect(() => {
 
   return (
     <div
-      className={`min-h-screen overflow-hidden transition-colors duration-500 ${
+      className={`relative isolate min-h-screen overflow-hidden transition-colors duration-500 ${
         darkMode
           ? "bg-slate-950 text-white"
           : "bg-slate-50 text-gray-900"
       }`}
     >
       {/* Animated background blobs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div
           className={`absolute -left-32 -top-32 h-80 w-80 rounded-full blur-3xl transition-all duration-700 ${
             darkMode ? "bg-indigo-600/20" : "bg-indigo-300/30"
@@ -240,6 +183,27 @@ useEffect(() => {
         />
       </div>
 
+              {/* Floating learning bubbles */}
+        <div className="absolute left-[5%] top-[18%] hidden animate-[floatBook_6s_ease-in-out_infinite] rounded-2xl border border-indigo-300/30 bg-white/60 p-4 text-3xl shadow-lg backdrop-blur-md sm:block">
+          📚
+        </div>
+
+        <div className="absolute right-[7%] top-[22%] hidden animate-bounce rounded-2xl border border-purple-300/30 bg-white/60 p-4 text-3xl shadow-lg backdrop-blur-md sm:block">
+          🎓
+        </div>
+
+        <div className="absolute bottom-[16%] left-[7%] hidden animate-[floatBook_7s_ease-in-out_infinite] rounded-2xl border border-blue-300/30 bg-white/60 p-4 text-3xl shadow-lg backdrop-blur-md sm:block">
+          🧠
+        </div>
+
+        <div className="absolute bottom-[12%] right-[8%] hidden animate-[floatBook_5s_ease-in-out_infinite] rounded-2xl border border-indigo-300/30 bg-white/60 p-4 text-3xl shadow-lg backdrop-blur-md sm:block">
+          💡
+        </div>
+
+        <div className="absolute left-[48%] top-[15%] hidden animate-pulse text-3xl text-indigo-400/70 lg:block">
+          ✦
+        </div>
+
       {/* Main */}
       <div className="relative z-10 min-h-screen lg:grid lg:grid-cols-2">
 
@@ -256,7 +220,19 @@ useEffect(() => {
 
           <div className="absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-white/10" />
 
-          <div className="absolute right-20 top-24 h-20 w-20 rounded-full border border-white/10 animate-bounce" />
+          {/* <div className="absolute right-20 top-24 h-20 w-20 rounded-full border border-white/10 animate-bounce" /> */}
+
+          
+{/* Floating learning elements */}
+<div className="pointer-events-none absolute inset-0 overflow-hidden">
+  <div className="learning-float learning-float-book">📚</div>
+  <div className="learning-float learning-float-brain">🧠</div>
+  <div className="learning-float learning-float-bulb">💡</div>
+  <div className="learning-float learning-float-rocket">🚀</div>
+  <div className="learning-float learning-float-notes">📝</div>
+  <div className="learning-float learning-float-star">✨</div>
+</div>
+
 
           <div className="relative z-10 flex w-full flex-col justify-between p-12 xl:p-16">
 
@@ -301,21 +277,21 @@ useEffect(() => {
               {/* Features */}
               <div className="mt-8 space-y-4">
 
-                <div className="flex translate-x-0 items-center gap-3 text-indigo-100 transition duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 text-indigo-100 transition-all duration-300 hover:translate-x-2 hover:scale-[1.02]">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15">
                     ✓
                   </div>
                   <span>Chat with your study documents</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-indigo-100 transition duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 text-indigo-100 transition-all duration-300 hover:translate-x-2 hover:scale-[1.02]">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15">
                     ✓
                   </div>
                   <span>Generate AI-powered quizzes</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-indigo-100 transition duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 text-indigo-100 transition-all duration-300 hover:translate-x-2 hover:scale-[1.02]">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15">
                     ✓
                   </div>
@@ -381,22 +357,22 @@ useEffect(() => {
             {/* Heading */}
             <div className="mb-8 animate-[fadeInUp_0.6s_ease-out]">
 
-              <p className="text-sm font-semibold text-indigo-500">
-                WELCOME BACK
-              </p>
+              <p className="animate-[fadeInUp_0.6s_ease-out] text-sm font-bold uppercase tracking-[0.25em] text-indigo-500">
+  ✨ Welcome back
+</p>
 
               <h2
-                className={`mt-2 text-3xl font-bold tracking-tight ${
-                  darkMode ? "text-white" : "text-gray-900"
-                }`}
+                className={`mt-2 animate-[fadeInUp_0.8s_ease-out] text-3xl font-extrabold tracking-tight sm:text-4xl ${
+  darkMode ? "text-white" : "text-gray-900"
+}`}
               >
                 Sign in to LearnMate
               </h2>
-
+{/* Decorative circles */}
               <p
-                className={`mt-2 ${
-                  darkMode ? "text-gray-400" : "text-gray-500"
-                }`}
+                className={`mt-2 animate-[fadeInUp_1s_ease-out] leading-7 ${
+  darkMode ? "text-gray-400" : "text-gray-500"
+}`}
               >
                 Continue your learning journey.
               </p>
@@ -404,7 +380,7 @@ useEffect(() => {
 
             {/* Login Card */}
             <div
-              className={`animate-[fadeInUp_0.8s_ease-out] rounded-3xl border p-7 shadow-2xl transition-all duration-500 sm:p-8 ${
+              className={`relative z-20 animate-[fadeInUp_0.8s_ease-out] rounded-3xl border p-7 shadow-2xl transition-all duration-500 sm:p-8 ${
                 darkMode
                   ? "border-slate-800 bg-slate-900/90 shadow-black/30"
                   : "border-gray-200 bg-white shadow-gray-200/60"
@@ -561,19 +537,6 @@ useEffect(() => {
               <div className="flex w-full justify-center">
   <div ref={googleButtonRef} />
 </div>
-              {/* <button
-                type="button"
-                className={`flex w-full items-center justify-center gap-3 rounded-xl border py-3.5 font-medium transition-all duration-300 hover:-translate-y-0.5 ${
-                  darkMode
-                    ? "border-slate-700 bg-slate-800 text-gray-200 hover:bg-slate-700"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <span className="text-lg font-bold">G</span>
-                Continue with Google
-              </button> */}
-
-              {/* Register */}
               <p
                 className={`mt-7 text-center text-sm ${
                   darkMode ? "text-gray-400" : "text-gray-500"
@@ -625,6 +588,87 @@ useEffect(() => {
               transform: translateY(0);
             }
           }
+
+          @keyframes floatBook {
+  0%, 100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateY(-18px) rotate(4deg);
+  }
+}
+
+
+.learning-float {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 8px 25px rgba(20, 10, 70, 0.15);
+  backdrop-filter: blur(10px);
+  font-size: 25px;
+  animation: learningFloat 6s ease-in-out infinite;
+}
+
+.learning-float-book {
+  top: 28%;
+  right: 13%;
+}
+
+.learning-float-brain {
+  top: 52%;
+  right: 25%;
+  animation-delay: -2s;
+}
+
+.learning-float-bulb {
+  bottom: 18%;
+  right: 15%;
+  animation-delay: -3s;
+}
+
+.learning-float-rocket {
+  top: 42%;
+  right: 5%;
+  animation-delay: -1s;
+}
+
+.learning-float-notes {
+  bottom: 32%;
+  right: 40%;
+  animation-delay: -4s;
+}
+
+.learning-float-star {
+  top: 18%;
+  right: 34%;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  animation-delay: -2s;
+}
+
+@keyframes learningFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learning-float {
+    animation: none;
+  }
+}
+
 
           @keyframes shake {
             0%, 100% {
