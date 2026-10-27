@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
@@ -9,6 +9,13 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+  () => localStorage.getItem("learnmate-theme") === "dark"
+);
+
+useEffect(() => {
+  localStorage.setItem("learnmate-theme", darkMode ? "dark" : "light");
+}, [darkMode]);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -35,7 +42,30 @@ function Register() {
   };
 
   return (
-    <main className="register-page">
+    <main
+  className="register-page"
+  data-theme={darkMode ? "dark" : "light"}
+>
+  <div className="learning-visuals" aria-hidden="true">
+    <span className="learning-icon icon-book">📚</span>
+    <span className="learning-icon icon-cap">🎓</span>
+    <span className="learning-icon icon-brain">🧠</span>
+    <span className="learning-icon icon-note">📝</span>
+    <span className="learning-icon icon-bulb">💡</span>
+    <span className="learning-icon icon-star">✦</span>
+    <div className="glow-orb orb-one" />
+    <div className="glow-orb orb-two" />
+  </div>
+    
+      <button
+    type="button"
+    className="register-theme-toggle"
+    onClick={() => setDarkMode((current) => !current)}
+    aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+  >
+    {darkMode ? "☀️ Light mode" : "🌙 Dark mode"}
+  </button>
+
       <section className="register-card">
         <div className="register-brand">LearnMate <span>AI</span></div>
         <div className="register-heading">
