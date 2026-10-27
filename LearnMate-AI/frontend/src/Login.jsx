@@ -107,6 +107,11 @@ useEffect(() => {
   let cancelled = false;
 
   const initializeGoogleLogin = () => {
+    console.log(
+  "Google Client ID available:",
+  Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID)
+);
+
     if (
       cancelled ||
       !window.google?.accounts?.id ||
