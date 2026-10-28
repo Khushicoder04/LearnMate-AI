@@ -354,6 +354,7 @@
     radial-gradient(ellipse at 85% 80%, rgba(68, 190, 255, 0.14), transparent 38%),
     var(--reg-bg, #f7f8fc);
   transition: background 0.3s ease, color 0.3s ease;
+  z-index: 10;
 }
 
 .register-page[data-theme="dark"] {
