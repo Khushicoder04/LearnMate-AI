@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
+import InteractiveBubbles from "./components/InteractiveBubbles";
 
 function Register() {
   const [name, setName] = useState("");
@@ -46,6 +47,8 @@ useEffect(() => {
   className="register-page"
   data-theme={darkMode ? "dark" : "light"}
 >
+  <InteractiveBubbles />
+  
   <div className="learning-visuals" aria-hidden="true">
     <span className="learning-icon icon-book">📚</span>
     <span className="learning-icon icon-cap">🎓</span>

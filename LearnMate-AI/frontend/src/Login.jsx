@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import InteractiveBubbles from "./components/InteractiveBubbles";
 import axios from "axios";
 
 function Login() {
@@ -206,7 +207,7 @@ useEffect(() => {
 
       {/* Main */}
       <div className="relative z-10 min-h-screen lg:grid lg:grid-cols-2">
-
+            <InteractiveBubbles />
         {/* LEFT SIDE */}
         <div
           className={`relative hidden overflow-hidden transition-all duration-700 lg:flex ${
@@ -308,8 +309,7 @@ useEffect(() => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center justify-center px-6 py-10 sm:px-10">
-
+<div className="relative z-10 flex items-center justify-center px-6 py-10 sm:px-10">
           <div className="w-full max-w-md">
 
             {/* Theme toggle */}
